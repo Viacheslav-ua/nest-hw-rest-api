@@ -10,29 +10,31 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { ContactsService } from './contacts.service';
-import { createContactDto } from './dto/create-contact.dto';
+import { CreateContactDto } from './dto/create-contact.dto';
+import { UpdateContactDto } from './dto/update-contact.dto';
+import { getContactDto } from './dto/get-contact.dto';
 
-interface ResQuery {
-  sortBy: string;
-  sortByDesc: string;
-  filter: string;
-  page: string;
-  favorite: string;
-}
+// interface ResQuery {
+//   sortBy: string;
+//   sortByDesc: string;
+//   filter: string;
+//   page: string;
+//   favorite: boolean;
+// }
 
 @Controller('/api/contacts')
 export class ContactsController {
   constructor(private contactService: ContactsService) {}
-
+  s;
   @Post()
-  async create(@Body() dto: createContactDto) {
+  async create(@Body() dto: CreateContactDto) {
     return await this.contactService.create(dto);
   }
 
   @Get()
-  async getAll(@Query() query: ResQuery) {
+  async getAll(@Query() queryDto: getContactDto) {
     try {
-      const contacts = await this.contactService.getAll();
+      const contacts = await this.contactService.getAll(queryDto);
       return {
         status: '200 OK',
         ContentType: 'application/json',
@@ -56,8 +58,8 @@ export class ContactsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: ObjectId, @Body() dto: createContactDto) {
-    const contact = await this.contactService.update(id, dto);
+  async update(@Param('id') id: ObjectId, @Body() bodyDto: UpdateContactDto) {
+    const contact = await this.contactService.update(id, bodyDto);
     return contact;
   }
 }

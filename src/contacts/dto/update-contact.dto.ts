@@ -11,7 +11,8 @@ import {
   IsOptional,
 } from 'class-validator';
 
-export class CreateContactDto {
+export class UpdateContactDto {
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
